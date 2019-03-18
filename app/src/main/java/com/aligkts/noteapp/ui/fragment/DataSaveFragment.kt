@@ -12,17 +12,14 @@ import com.aligkts.noteapp.R
 import com.aligkts.noteapp.dto.NoteDTO
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_data_save.*
-import org.json.JSONArray
-import java.util.*
 
 
 class DataSaveFragment : Fragment() {
 
-    private val TAG = "NoteList"
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(activity) }
     private val editor by lazy { prefs.edit() }
-    private val listSharedPref: ArrayList<NoteDTO>? = ArrayList()
-
+    private var listSharedPref: ArrayList<NoteDTO>? = ArrayList()
+    private var count: Int? = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +28,7 @@ class DataSaveFragment : Fragment() {
 
         return inflater.inflate(R.layout.fragment_data_save, container, false)
     }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,17 +41,20 @@ class DataSaveFragment : Fragment() {
 
             if (edtNote.text != null) {
 
-                editor.clear()
+                listSharedPref?.add(NoteDTO(edtNote.text.toString(), count))
+                count = count?.plus(1)
+                saveData()
+                /*   editor.clear()
                 editor.apply()
 
-                listSharedPref?.add(NoteDTO(edtNote.text.toString(), 0))
+                listSharedPref?.add(NoteDTO(edtNote.text.toString(), count))
 
                 var json = Gson().toJson(listSharedPref)
                 var jsonArray = JSONArray(json)
 
                 editor.putString("jsonarray", jsonArray.toString())
                 editor.apply()
-
+                count++   */
                 Navigation.findNavController(it).navigate(R.id.action_dataSave_to_main)
 
             } else {
@@ -63,6 +64,13 @@ class DataSaveFragment : Fragment() {
         }
 
 
+    }
+
+    private fun saveData() {
+        val gson = Gson()
+        val jsonNote = gson.toJson(listSharedPref)
+        editor.putString("task_list", jsonNote)
+        editor.apply()
     }
 
 

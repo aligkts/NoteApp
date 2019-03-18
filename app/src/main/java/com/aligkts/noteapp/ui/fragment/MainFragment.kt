@@ -12,12 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aligkts.noteapp.R
 import com.aligkts.noteapp.adapter.NoteAdapter
 import com.aligkts.noteapp.dto.NoteDTO
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.util.*
 
 
 class MainFragment : Fragment() {
 
+
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(activity) }
+    private val editor by lazy { prefs.edit() }
+    private val gson by lazy { Gson() }
+    private var listSharedPref: List<NoteDTO>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,14 +46,45 @@ class MainFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val json_array = prefs.getString("jsonarray", null)
+        loadData()
+        buildRecyclerView()
+
+        /*
+        val stringJson = prefs.getString("jsonarray", null)
+
+        val jsonArray=JSONArray(stringJson)
+
+        val note=((jsonArray[0]) as JSONObject).get("note")
+        val count=((jsonArray[0]) as JSONObject).get("count")
+
 
         recyclerNotes.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             adapter = NoteAdapter(ArrayList())
-            (this.adapter as NoteAdapter).setNewList(json_array as List<NoteDTO>)
+            //(this.adapter as NoteAdapter).setNewList(jsonArray as List<NoteDTO>)  */
+        }
+
+    private fun loadData() {
+
+
+        val jsonGetNote = prefs.getString("task_list", null)
+        val gson = Gson()
+        val type = object : TypeToken<ArrayList<NoteDTO>>() {}.type
+        listSharedPref = gson.fromJson(jsonGetNote, type)
+
+        if (listSharedPref == null) {
+            listSharedPref = ArrayList()
         }
 
     }
 
+    private fun buildRecyclerView() {
+        recyclerNotes.setHasFixedSize(true)
+        recyclerNotes.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        recyclerNotes.adapter = NoteAdapter(listSharedPref!!)
+    }
+
+
 }
+
+

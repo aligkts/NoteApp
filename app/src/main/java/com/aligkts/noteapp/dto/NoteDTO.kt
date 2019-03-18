@@ -7,3 +7,5 @@ data class NoteDTO(
     @SerializedName("note") val note: String? = "",
     @SerializedName("count") val count: Int? = 0
 )
+
+
