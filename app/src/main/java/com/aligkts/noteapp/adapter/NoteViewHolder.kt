@@ -10,12 +10,13 @@ import com.aligkts.noteapp.dto.NoteDTO
 
 class NoteViewHolder(viewGroup: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(viewGroup.context)
-        .inflate(R.layout.note_item, viewGroup, false)
+        .inflate(R.layout.note_item,
+                viewGroup,
+                false)
 
 ) {
 
     private val txtNote by lazy { itemView.findViewById<TextView>(R.id.txtNoteItem) }
-
 
     fun bindTo(context: Context, noteDTO: NoteDTO) {
 

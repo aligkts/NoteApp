@@ -1,11 +1,11 @@
 package com.aligkts.noteapp.adapter
 
+import android.preference.PreferenceManager
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aligkts.noteapp.dto.NoteDTO
 
-class NoteAdapter(var itemList: List<NoteDTO>) : RecyclerView.Adapter<NoteViewHolder>() {
-
+class NoteAdapter(var itemList: ArrayList<NoteDTO>) : RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
 
@@ -22,10 +22,10 @@ class NoteAdapter(var itemList: List<NoteDTO>) : RecyclerView.Adapter<NoteViewHo
         holder.bindTo(holder.itemView.context, itemList[position])
     }
 
-    fun setNewList(itemList: List<NoteDTO>) {
-
-        this.itemList = itemList
-        notifyDataSetChanged()
+    fun removeItem(viewHolder : RecyclerView.ViewHolder) {
+        itemList.removeAt(viewHolder.adapterPosition)
+        notifyItemRemoved(viewHolder.adapterPosition)
     }
+
 
 }
